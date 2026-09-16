@@ -1,0 +1,5 @@
+
+# Headless object trees produced by retro/*/build-vice-*-headless.sh. They
+# default to sitting beside the VICE source, which is this repository.
+/vice/build-linux-x64-headless/
+/vice/build-android-arm64-headless/

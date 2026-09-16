@@ -22,11 +22,20 @@ fi
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 
+# VICE_SRC and VICE_BUILD_DIR are documented as overrides, so they have to
+# reach CMake -- setting them in the environment alone did nothing, and the
+# failure was CMake reporting the DEFAULT path as missing while the caller was
+# looking at the one they had just built.
+VICE_ARGS=()
+[ -n "${VICE_SRC:-}" ]       && VICE_ARGS+=(-DVICE_SRC="$VICE_SRC")
+[ -n "${VICE_BUILD_DIR:-}" ] && VICE_ARGS+=(-DVICE_BUILD_DIR="$VICE_BUILD_DIR")
+
 cmake \
   -DCMAKE_TOOLCHAIN_FILE="$NDK/build/cmake/android.toolchain.cmake" \
   -DANDROID_ABI=arm64-v8a \
   -DANDROID_PLATFORM="android-${API}" \
   -DCMAKE_BUILD_TYPE=Release \
+  "${VICE_ARGS[@]}" \
   "$HERE"
 
 cmake --build . -j"${JOBS:-4}"
